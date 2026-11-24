@@ -8,44 +8,42 @@ local function is_file(buf)
 end
 
 --------------------------------------------------------------------------------
--- 配色：Kanagawa，深色 wave，浅色 lotus，跟随系统（终端回报背景色后 Neovim 会自动重载配色）。
+-- 配色：Catppuccin Mocha。
 -- transparent 让编辑区沿用终端 / 窗口自身的背景。
--- 本配置自己的高亮组（Bar* 胶囊、Dash* 启动页）也在这里定义，颜色全部取自主题，深浅切换时一起换。
+-- 本配置自己的高亮组（Bar* 胶囊、Dash* 启动页）也在这里定义，颜色全部取自主题，切换时一起换。
 --------------------------------------------------------------------------------
-require("kanagawa").setup({
-  transparent = true,
-  background = { dark = "wave", light = "lotus" },
-  colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
-  overrides = function(colors)
-    local t = colors.theme
-    local fill = t.ui.bg_p1 -- 胶囊底色：比背景亮一档。
+require("catppuccin").setup({
+  flavour = "mocha",
+  transparent_background = true,
+  custom_highlights = function(C)
+    local fill = C.surface0 -- 胶囊底色：比背景亮一档。
     local hl = {
       -- 浮窗统一：无底色，只留圆角边框。
-      NormalFloat = { fg = t.ui.fg, bg = "none" },
-      FloatBorder = { fg = t.ui.bg_p2, bg = "none" },
-      FloatTitle = { fg = t.syn.fun, bg = "none", bold = true },
-      WinSeparator = { fg = t.ui.bg_p2 },
-      StatusLine = { fg = t.ui.bg_p2, bg = "none" },
-      StatusLineNC = { fg = t.ui.bg_p2, bg = "none" },
-      MsgArea = { fg = t.ui.fg_dim },
-      CursorLineNr = { fg = t.syn.constant, bold = true },
-      Folded = { bg = t.ui.bg_p1 },
+      NormalFloat = { fg = C.text, bg = "NONE" },
+      FloatBorder = { fg = C.surface1, bg = "NONE" },
+      FloatTitle = { fg = C.blue, bg = "NONE", bold = true },
+      WinSeparator = { fg = C.surface1 },
+      StatusLine = { fg = C.surface1, bg = "NONE" },
+      StatusLineNC = { fg = C.surface1, bg = "NONE" },
+      MsgArea = { fg = C.subtext1 },
+      CursorLineNr = { fg = C.peach, bold = true },
+      Folded = { bg = C.surface0 },
 
       -- 补全菜单。
-      Pmenu = { fg = t.ui.fg_dim, bg = "none" },
-      PmenuSel = { fg = "none", bg = t.ui.bg_p2, bold = true },
-      PmenuSbar = { bg = "none" },
-      PmenuThumb = { bg = t.ui.bg_p2 },
+      Pmenu = { fg = C.subtext1, bg = "NONE" },
+      PmenuSel = { fg = "NONE", bg = C.surface1, bold = true },
+      PmenuSbar = { bg = "NONE" },
+      PmenuThumb = { bg = C.surface1 },
       BlinkCmpMenuBorder = { link = "FloatBorder" },
       BlinkCmpDocBorder = { link = "FloatBorder" },
       BlinkCmpSignatureHelpBorder = { link = "FloatBorder" },
-      BlinkCmpGhostText = { fg = t.ui.nontext },
-      BlinkCmpLabelDetail = { fg = t.syn.comment },
-      BlinkCmpLabelDescription = { fg = t.syn.comment },
-      PmenuExtra = { fg = t.syn.comment, bg = "none" },
-      PmenuExtraSel = { fg = t.syn.comment, bg = t.ui.bg_p2 },
-      PmenuKind = { fg = t.ui.fg_dim, bg = "none" },
-      PmenuKindSel = { fg = t.ui.fg_dim, bg = t.ui.bg_p2 },
+      BlinkCmpGhostText = { fg = C.overlay0 },
+      BlinkCmpLabelDetail = { fg = C.overlay2 },
+      BlinkCmpLabelDescription = { fg = C.overlay2 },
+      PmenuExtra = { fg = C.overlay2, bg = "NONE" },
+      PmenuExtraSel = { fg = C.overlay2, bg = C.surface1 },
+      PmenuKind = { fg = C.subtext1, bg = "NONE" },
+      PmenuKindSel = { fg = C.subtext1, bg = C.surface1 },
 
       -- 搜索窗口（FZF-Lua）：和其他浮窗同一套边框和标题。
       FzfLuaNormal = { link = "NormalFloat" },
@@ -53,75 +51,75 @@ require("kanagawa").setup({
       FzfLuaTitle = { link = "FloatTitle" },
       FzfLuaPreviewNormal = { link = "NormalFloat" },
       FzfLuaPreviewBorder = { link = "FloatBorder" },
-      FzfLuaPreviewTitle = { fg = t.ui.special, bg = "none" },
+      FzfLuaPreviewTitle = { fg = C.overlay2, bg = "NONE" },
       FzfLuaFzfSeparator = { link = "FloatBorder" },
       FzfLuaFzfBorder = { link = "FloatBorder" },
-      BlinkCmpLabelMatch = { fg = t.syn.fun, bold = true },
+      BlinkCmpLabelMatch = { fg = C.blue, bold = true },
 
       -- 缩进线：平时几乎看不见，当前作用域亮一档。
-      IblIndent = { fg = t.ui.bg_p1, nocombine = true },
-      IblScope = { fg = t.ui.special, nocombine = true },
+      IblIndent = { fg = C.surface0, nocombine = true },
+      IblScope = { fg = C.overlay2, nocombine = true },
 
       -- Git 细条。
-      GitSignsAdd = { fg = t.vcs.added },
-      GitSignsChange = { fg = t.vcs.changed },
-      GitSignsDelete = { fg = t.vcs.removed },
+      GitSignsAdd = { fg = C.green },
+      GitSignsChange = { fg = C.yellow },
+      GitSignsDelete = { fg = C.red },
 
       -- 通知卡片：图标按级别着色；警告和错误连边框一起着色。
-      NotifyText = { fg = t.ui.fg, bg = "none" },
-      NotifyInfoIcon = { fg = t.diag.info },
-      NotifyWarnIcon = { fg = t.diag.warning },
-      NotifyErrorIcon = { fg = t.diag.error },
-      NotifyInfoBorder = { fg = t.ui.bg_p2, bg = "none" },
-      NotifyWarnBorder = { fg = t.diag.warning, bg = "none" },
-      NotifyErrorBorder = { fg = t.diag.error, bg = "none" },
-      TinyCmdlineNormal = { fg = t.ui.fg, bg = "none" },
+      NotifyText = { fg = C.text, bg = "NONE" },
+      NotifyInfoIcon = { fg = C.sky },
+      NotifyWarnIcon = { fg = C.yellow },
+      NotifyErrorIcon = { fg = C.red },
+      NotifyInfoBorder = { fg = C.surface1, bg = "NONE" },
+      NotifyWarnBorder = { fg = C.yellow, bg = "NONE" },
+      NotifyErrorBorder = { fg = C.red, bg = "NONE" },
+      TinyCmdlineNormal = { fg = C.text, bg = "NONE" },
 
       -- 浮动状态胶囊。
-      InclineNormal = { bg = "none" },
-      InclineNormalNC = { bg = "none" },
-      BarCap = { fg = fill, bg = "none" },
-      BarText = { fg = t.ui.fg, bg = fill, bold = true, italic = true },
-      BarTextModified = { fg = t.syn.constant, bg = fill, bold = true, italic = true },
-      BarSep = { fg = t.ui.nontext, bg = fill },
-      BarHint = { fg = t.diag.hint, bg = fill },
-      BarTextNC = { fg = t.ui.special, bg = fill, italic = true },
-      BarDim = { fg = t.ui.special, bg = fill },
-      BarModified = { fg = t.syn.constant, bg = fill },
-      BarError = { fg = t.diag.error, bg = fill },
-      BarWarn = { fg = t.diag.warning, bg = fill },
-      BarAdd = { fg = t.vcs.added, bg = fill },
-      BarChange = { fg = t.vcs.changed, bg = fill },
-      BarDelete = { fg = t.vcs.removed, bg = fill },
-      BarBranch = { fg = t.syn.keyword, bg = fill },
-      BarLsp = { fg = t.syn.type, bg = fill },
-      BarActivity = { fg = t.syn.constant, bg = fill, bold = true },
+      InclineNormal = { bg = "NONE" },
+      InclineNormalNC = { bg = "NONE" },
+      BarCap = { fg = fill, bg = "NONE" },
+      BarText = { fg = C.text, bg = fill, bold = true, italic = true },
+      BarTextModified = { fg = C.peach, bg = fill, bold = true, italic = true },
+      BarSep = { fg = C.overlay0, bg = fill },
+      BarHint = { fg = C.teal, bg = fill },
+      BarTextNC = { fg = C.overlay2, bg = fill, italic = true },
+      BarDim = { fg = C.overlay2, bg = fill },
+      BarModified = { fg = C.peach, bg = fill },
+      BarError = { fg = C.red, bg = fill },
+      BarWarn = { fg = C.yellow, bg = fill },
+      BarAdd = { fg = C.green, bg = fill },
+      BarChange = { fg = C.yellow, bg = fill },
+      BarDelete = { fg = C.red, bg = fill },
+      BarBranch = { fg = C.mauve, bg = fill },
+      BarLsp = { fg = C.yellow, bg = fill },
+      BarActivity = { fg = C.peach, bg = fill, bold = true },
 
       -- 启动页的菜单（星系画面自己的颜色在 dashboard.lua 里）。
-      DashIcon = { fg = t.syn.fun },
-      DashLabel = { fg = t.ui.fg },
-      DashKey = { fg = t.syn.keyword, bold = true },
-      DashQuote = { fg = t.syn.constant, italic = true },
-      DashDim = { fg = t.ui.special },
+      DashIcon = { fg = C.blue },
+      DashLabel = { fg = C.text },
+      DashKey = { fg = C.mauve, bold = true },
+      DashQuote = { fg = C.peach, italic = true },
+      DashDim = { fg = C.overlay2 },
     }
     -- 模式色块：色块本体，以及左侧同色的圆角。
     local modes = {
-      Normal = t.syn.fun,
-      Insert = t.syn.string,
-      Visual = t.syn.keyword,
-      Replace = t.diag.error,
-      Command = t.syn.constant,
-      Terminal = t.syn.special1,
+      Normal = C.blue,
+      Insert = C.green,
+      Visual = C.mauve,
+      Replace = C.red,
+      Command = C.peach,
+      Terminal = C.pink,
     }
     for name, color in pairs(modes) do
-      hl["BarMode" .. name] = { fg = t.ui.bg, bg = color, bold = true }
-      hl["BarMode" .. name .. "Cap"] = { fg = color, bg = "none" }
+      hl["BarMode" .. name] = { fg = C.base, bg = color, bold = true }
+      hl["BarMode" .. name .. "Cap"] = { fg = color, bg = "NONE" }
       hl["BarMode" .. name .. "Sep"] = { fg = color, bg = fill }
     end
     return hl
   end,
 })
-vim.cmd.colorscheme("kanagawa")
+vim.cmd.colorscheme("catppuccin")
 
 --------------------------------------------------------------------------------
 -- 消息与命令行：Neovim 0.12 的 ui2 + tiny-cmdline。按 : 时命令行在屏幕中间浮出，平时不占行；

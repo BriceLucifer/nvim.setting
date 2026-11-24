@@ -6,7 +6,7 @@ local gh = "https://github.com/"
 -- 第一屏就要用到的：启动时直接加载。
 vim.pack.add({
   -- 界面
-  gh .. "rebelot/kanagawa.nvim", -- 配色：深色 wave，浅色 lotus。
+  { src = gh .. "catppuccin/nvim", name = "catppuccin" }, -- 配色：Catppuccin Mocha。
   gh .. "b0o/incline.nvim", -- 每个窗口右上角的浮动状态胶囊，替代状态栏和标签栏。
   gh .. "nvim-tree/nvim-web-devicons", -- 文件图标。
   gh .. "karb94/neoscroll.nvim", -- 平滑滚动。

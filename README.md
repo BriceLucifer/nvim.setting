@@ -4,7 +4,7 @@
 
 - **没有下巴**：没有状态栏、没有命令行那一行、没有标签栏，屏幕上下都是代码。
 - **全浮动**：状态信息在每个窗口右上角的胶囊里；按 `:` 时命令行在屏幕中间浮出；通知是右上角的小卡片；普通消息在右下角出现几秒后消失。
-- **Kanagawa 配色**：深色 wave、浅色 lotus，跟随系统自动切换。
+- **Catppuccin 配色**：只用 Mocha。
 - **手写而不是插件**：启动页（会转动的星系）、通知卡片、行号列、输入框、关闭文件、窗口放大，都是配置里的 Lua。
 - **快**：启动约 30 ms。补全、Git 标记、缩进线在第一屏画出来之后才加载；超过 1 MB 的文件自动关掉语法树，打开和移动不卡。
 
@@ -277,7 +277,7 @@ lua/config/
 
 | 插件 | 用途 |
 | --- | --- |
-| [kanagawa.nvim](https://github.com/rebelot/kanagawa.nvim) | 配色 |
+| [catppuccin/nvim](https://github.com/catppuccin/nvim) | 配色 |
 | [incline.nvim](https://github.com/b0o/incline.nvim) | 右上角的浮动胶囊 |
 | [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) | 文件图标 |
 | [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim) | 缩进线 |
