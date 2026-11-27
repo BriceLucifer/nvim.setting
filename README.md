@@ -70,6 +70,7 @@ nvim
 | `]c` / `[c`、`<leader>gp` | 跳到下一处 / 上一处 Git 修改、预览修改 |
 | `<leader>w` / `<leader>q` | 保存 / 退出 |
 | `<leader>n` / `<leader>m` | 翻看通知历史 / 消息历史 |
+| `<leader>u` | 撤销历史树，可以回到任意一次修改 |
 | `<leader>fk` | 忘了按键时搜索所有快捷键 |
 
 ## 界面
@@ -176,7 +177,10 @@ nvim
 | `<` / `>`（选中后） | 缩进，选区不丢 |
 | `J` / `K`（选中后） | 把选中的几行下移 / 上移 |
 | `<leader>p`（选中后） | 粘贴覆盖选区，被覆盖的文字不进剪贴板 |
+| `<leader>u` | 打开 / 关闭撤销历史树 |
 | `Esc` | 清除搜索高亮 |
+
+**撤销历史树**：普通的 `u` / `Ctrl-r` 只能沿一条线来回走；撤销几步后又改了别的，原来那条路线就走不回去了。`<leader>u` 在右边打开一棵树，把这些"分叉"都列出来，在树里上下移动，文件就跟着变成那个时刻的样子。用的是 Neovim 0.12 自带的 `nvim.undotree`，不是第三方插件，第一次按下时才加载。配合 `undofile`，关掉文件再打开，历史还在。
 
 ### 文本对象
 
@@ -293,6 +297,8 @@ lua/config/
 | [blink.cmp](https://github.com/Saghen/blink.cmp) | 补全 |
 | [nvim-autopairs](https://github.com/windwp/nvim-autopairs) | 括号配对 |
 | [nvim-surround](https://github.com/kylechui/nvim-surround) | 包围符号 |
+
+另外用到 Neovim 自带、默认不加载的 `nvim.undotree`（撤销历史树），不需要下载，也不记在 `nvim-pack-lock.json` 里。
 
 ## 日常维护
 

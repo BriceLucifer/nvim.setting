@@ -1,5 +1,5 @@
 -- 快捷键和自定义命令。LSP 的按键在 code.lua，只在挂上语言服务的文件里生效。
--- 空格为 leader：f 查找、s 窗口、b 缓冲区、t 标签页、g Git、l LSP、m 消息、e 文件管理、w 保存、q 退出。
+-- 空格为 leader：f 查找、s 窗口、b 缓冲区、t 标签页、g Git、l LSP、m 消息、u 撤销历史、e 文件管理、w 保存、q 退出。
 local map = vim.keymap.set
 local tools = require("config.tools")
 local pick = tools.pick
@@ -129,6 +129,13 @@ map("n", "<leader>fR", function() require("grug-far").open({}) end, { desc = "Se
 -- 消息在右下角浮出几秒，通知是右上角的卡片；这两个键翻看各自的历史。
 map("n", "<leader>m", "<cmd>messages<CR>", { silent = true, desc = "Message history (消息历史)" })
 map("n", "<leader>n", "<cmd>Notifications<CR>", { silent = true, desc = "Notification history (通知历史)" })
+
+-- 撤销历史树：能回到任意一次修改，包括被新修改"分叉"掉的那些；再按一次关闭。
+-- Neovim 0.12 自带的 nvim.undotree，第一次按下时才加载。
+map("n", "<leader>u", function()
+  vim.cmd.packadd("nvim.undotree")
+  require("undotree").open()
+end, { desc = "Undo tree (撤销历史)" })
 
 -- Git 修改块；diff 模式保留原生跳转。gitsigns 在启动后才加载，所以这里都是用到时再取。
 local function gs(method, ...)
