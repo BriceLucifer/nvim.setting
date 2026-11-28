@@ -99,6 +99,8 @@ nvim
 
 **行号列**：行号右边的细条是 Git 修改（绿 新增 / 黄 修改 / 红 删除）。只有当前窗口显示相对行号。上下分屏之间的横线就是分隔线。
 
+**看不见的字符**：Tab 显示成 `»`，行尾多余的空格显示成 `·`，混进来一眼就能看到。Go 和 Makefile 规定用 Tab 缩进，那里的 Tab 不显示。
+
 ## 全部快捷键
 
 ### 文件管理（oil）
@@ -161,6 +163,7 @@ nvim
 | `<leader>gr` | 还原这一处修改（丢掉改动） |
 | `<leader>gb` / `<leader>gB` | 这一行 / 整个文件每一行是谁改的 |
 | `<leader>gd` | 并排对比这个文件还没暂存的改动 |
+| `ih`（配合 `d` `v` `y`） | 光标所在的这一块修改：`dih` 删掉、`vih` 选中、`yih` 复制 |
 
 ### 跳转和编辑
 
@@ -171,6 +174,8 @@ nvim
 | `ys{范围}{符号}` | 加包围符号：`ysiw)` 给单词加括号，`yss"` 给整行加引号 |
 | `cs{旧}{新}` / `ds{符号}` | 换 / 删包围符号 |
 | `S{符号}`（选中后） | 给选区加包围符号 |
+| `j` / `k` | 折行的文件里按屏幕上看到的行走；带数字（`5j`）时按真实行走 |
+| `Ctrl-o` / `Ctrl-i` | 跳转历史的后退 / 前进，像浏览器；回去时连滚动位置一起恢复 |
 | `n` / `N` | 下一个 / 上一个搜索结果，居中 |
 | `Ctrl-d` / `Ctrl-u` | 平滑翻半页 |
 | `<` / `>`（选中后） | 缩进，选区不丢 |
@@ -242,7 +247,9 @@ nvim
 | Rust | rust-analyzer | `/opt/homebrew/opt/rustup/bin/rust-analyzer` |
 | Haskell | haskell-language-server | `~/.ghcup/hls/2.14.0.0/bin/…` |
 | Typst | tinymist | `/opt/homebrew/bin/tinymist` |
+| Lua | lua-language-server | `/opt/homebrew/bin/lua-language-server` |
 
+- **改这份配置时最有用的是 Lua**：认识 `vim.*` 的全部接口，有补全、文档和报错；`<leader>lf` 格式化成 4 格空格、不对齐注释（风格在 `code.lua` 的 `lua_ls` → `format`）。
 - **OCaml 和 Haskell 的路径里带版本号**，升级后要改 `code.lua` 里对应那一行，否则它会悄悄不启动。
 - **C / C++ 项目需要 `compile_commands.json`**，否则 clangd 会报找不到头文件之类的假错误。CMake 配置时加 `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`。
 - 诊断：出错的位置画波浪线，说明文字只在光标所在行出现。
@@ -313,25 +320,22 @@ lua/config/
 
 ### 让代码文件也折行
 
-默认只有 markdown、纯文本、typst 折行。要让代码也折行，改 `options.lua`「分屏和搜索」那段，然后 `:restart`：
+默认只有 markdown、纯文本、typst 折行，代码不折行。**一般不建议给代码开**：一行逻辑会被拆成好几行显示，缩进结构反而难看清；代码行宽本来也有格式化工具管着。
+
+**偶尔遇到一行特别长**，临时打开就够了，再输一次关掉，只影响当前窗口：
+
+```vim
+:set wrap!
+```
+
+**真想让代码一直折行**，改 `options.lua`「分屏和搜索」那段，然后 `:restart`：
 
 ```lua
 opt.wrap = true -- 原来是 false
 opt.linebreak = true -- 新加：在单词之间折，不把单词劈开
 ```
 
-可选：
-
-- **`j` / `k` 按屏幕行走**：不加的话 `j` 会跳过整段折行，逐行走得用 `gj` / `gk`。加到 `keymaps.lua`，带数字（如 `5j`）时仍按真实行走：
-
-  ```lua
-  map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down by display line (按屏幕行下移)" })
-  map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up by display line (按屏幕行上移)" })
-  ```
-
-- `options.lua` 里「Markdown / 文本」那段自动命令只负责开折行，改完就多余了，可以删掉。
-
-缩进对齐（`breakindent`）和行号列已经处理好折行，不用动。
+改完后「Markdown / 文本」那段自动命令就多余了，可以删掉。其余都已经处理好，不用动：`j` / `k` 按屏幕行走（带数字时按真实行），折出来的行接着原缩进对齐（`breakindent`），行号列也不会错位。
 
 ## 出了问题
 

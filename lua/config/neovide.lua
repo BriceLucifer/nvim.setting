@@ -1,6 +1,6 @@
 -- Neovide 专用设置；在其它前端（终端 nvim）里直接跳过。
 if not vim.g.neovide then
-  return
+    return
 end
 
 local g = vim.g
@@ -24,9 +24,9 @@ g.neovide_floating_shadow = false
 g.neovide_input_ime = false
 local ime = vim.api.nvim_create_augroup("NeovideIme", { clear = true })
 local function set_ime(on)
-  return function()
-    g.neovide_input_ime = on
-  end
+    return function()
+        g.neovide_input_ime = on
+    end
 end
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, { group = ime, callback = set_ime(true) })
 vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave" }, { group = ime, callback = set_ime(false) })
@@ -43,9 +43,9 @@ map("i", "<D-s>", "<cmd>write<cr>", { desc = "Save (保存)" })
 -- Cmd +/-/0 缩放字号。
 g.neovide_scale_factor = 1.0
 local function zoom(factor)
-  return function()
-    g.neovide_scale_factor = factor and math.max(0.5, g.neovide_scale_factor * factor) or 1.0
-  end
+    return function()
+        g.neovide_scale_factor = factor and math.max(0.5, g.neovide_scale_factor * factor) or 1.0
+    end
 end
 map({ "n", "i", "v", "t" }, "<D-=>", zoom(1.1), { desc = "Zoom in (放大字号)" })
 map({ "n", "i", "v", "t" }, "<D-->", zoom(1 / 1.1), { desc = "Zoom out (缩小字号)" })
